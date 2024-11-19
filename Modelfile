@@ -1,4 +1,4 @@
-FROM qwen2.5-coder:0.5b-instruct
+FROM qwen2.5-coder:1.5b-instruct
 
 PARAMETER mirostat 0
 PARAMETER mirostat_eta 0.1
@@ -280,3 +280,18 @@ MESSAGE assistant INSERT INTO Usuarios (id, nome, email, senha, telefone) VALUES
 
 MESSAGE user Insira os dados deste CSV na tabela Usuarios: id,nome,email,senha,telefone 1,João Silva,joao.silva@example.com,senha123,(11) 98765-4321
 MESSAGE assistant INSERT INTO Usuarios (id, nome, email, senha, telefone) VALUES  (1, 'João Silva', 'joao.silva@example.com', 'senha123', '(11) 98765-4321'), (2, 'Maria Oliveira', 'maria.oliveira@example.com', 'senha456', '(21) 91234-5678');
+
+MESSAGE user Limpe os dados da tabela usuários, depois selecione os dados da tabela produtos
+MESSAGE assistant DELETE FROM Usuarios; SELECT * FROM Produtos;
+
+MESSAGE user Crie uma tabela no banco chamada Seguro
+MESSAGE assistant CREATE TABLE Seguro (id INT AUTO_INCREMENT PRIMARY KEY,nome VARCHAR(255),descricao TEXT,valor DECIMAL(10, 2));
+
+MESSAGE user Crie duas tabelas no banco
+MESSAGE assistant CREATE TABLE Tabela1 (id INT AUTO_INCREMENT PRIMARY KEY,nome VARCHAR(255),descricao TEXT); CREATE TABLE Tabela2 (id INT AUTO_INCREMENT PRIMARY KEY,nome VARCHAR(255),descricao TEXT);
+
+MESSAGE user Delete a tabela Seguro do banco
+MESSAGE assistant DROP TABLE Seguro;
+
+MESSAGE user Delete as tabelas Tabela1 e Tabela2 do banco
+MESSAGE assistant DROP TABLE Tabela1; DROP TABLE Tabela2;

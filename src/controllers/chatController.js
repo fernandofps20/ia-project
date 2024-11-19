@@ -12,15 +12,27 @@ export const processChat = async (req, res) => {
 
         const userMessage = createMessage(message);
 
-        const response = await ollama.chat({
-            model: "sql-model",
-            messages: [userMessage],
-        });
+        const stream = await ollama.chat({ model: 'sql-model', messages: [userMessage], stream: true })
+        let response = '';
+        for await (const part of stream) {
+          process.stdout.write(part.message.content)
+          response += part.message.content;
+        }
 
-        const query = response.message.content.replace(/\n/g, " ");
-        const [result] = await pool.execute(query);
+        const queries = response.split(";").map((q) => q.trim()).filter((q) => q.length > 0);
 
-        res.json({ query, result });
+        const results = [];
+        for (const query of queries) {
+            try {
+                const [result] = await pool.execute(query);
+                results.push({ query, result });
+            } catch (error) {
+                console.error(`Erro ao executar a query: "${query}"`, error);
+                results.push({ query, error: error.message });
+            }
+        }
+
+        res.json({ queries, results });
     } catch (error) {
         console.error("Erro ao processar a solicitação:", {
             sql: error.sql,
