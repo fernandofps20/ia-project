@@ -1,6 +1,5 @@
 import mysql from 'mysql2/promise';
 
-// Configurações da conexão
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
@@ -9,7 +8,7 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,      
   queueLimit: 0,
-  multipleStatements: true // Habilita múltiplos comandos SQL       
+  multipleStatements: true
 });
 
 export default pool;

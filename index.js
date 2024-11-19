@@ -37,14 +37,21 @@ app.post("/api/data", async (req, res) => {
     if (!response?.message?.content) {
       throw new Error("A resposta do modelo está vazia ou inválida.");
     }
+    const query = response.message.content.replace(/\n/g, " ").match(/```sql\s([\s\S]*?)\s```/)[1];
 
-    const [result] = await pool.execute(response?.message?.content);
-    console.log(result);
+    const [result] = await pool.execute(query);
 
-    res.send(response.message.content);
+    res.send({
+      query: query,
+      result
+    });
   } catch (error) {
-    console.error("Erro ao processar a solicitação:", error.message);
+    console.error("Erro ao processar a solicitação:", {
+      sql: error.sql,
+      details: error.message,
+    });
     res.status(500).json({
+      sql: error.sql,
       error: "Ocorreu um erro ao processar sua solicitação.",
       details: error.message,
     });

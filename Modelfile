@@ -9,7 +9,7 @@ PARAMETER repeat_penalty 1.1
 PARAMETER temperature 0
 PARAMETER seed 0
 PARAMETER tfs_z 1
-PARAMETER num_predict -2
+PARAMETER num_predict -1
 PARAMETER top_k 40
 PARAMETER top_p 0.9
 PARAMETER min_p 0.0
@@ -30,7 +30,7 @@ SYSTEM """Você é um assistente de IA especializado exclusivamente em gerar que
 
 **Esquema do Banco de Dados**:
 -- Tabela de usuários
-CREATE TABLE Usuarios (
+TABLE Usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE Usuarios (
 );
 
 -- Tabela de endereços
-CREATE TABLE Enderecos (
+TABLE Enderecos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     endereco VARCHAR(255) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE Enderecos (
 );
 
 -- Tabela de categorias de produtos
-CREATE TABLE Categorias (
+TABLE Categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
@@ -64,7 +64,7 @@ CREATE TABLE Categorias (
 );
 
 -- Tabela de produtos
-CREATE TABLE Produtos (
+TABLE Produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
     descricao TEXT,
@@ -77,7 +77,7 @@ CREATE TABLE Produtos (
 );
 
 -- Tabela de imagens de produtos
-CREATE TABLE ImagensProdutos (
+TABLE ImagensProdutos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     produto_id INT NOT NULL,
     url_imagem VARCHAR(255) NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE ImagensProdutos (
 );
 
 -- Tabela de pedidos
-CREATE TABLE Pedidos (
+TABLE Pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     endereco_id INT NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE Pedidos (
 );
 
 -- Tabela de itens do pedido
-CREATE TABLE ItensPedido (
+TABLE ItensPedido (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pedido_id INT NOT NULL,
     produto_id INT NOT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE ItensPedido (
 );
 
 -- Tabela de pagamentos
-CREATE TABLE Pagamentos (
+TABLE Pagamentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pedido_id INT NOT NULL,
     metodo_pagamento VARCHAR(50) NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE Pagamentos (
 );
 
 -- Tabela de cupons de desconto
-CREATE TABLE Cupons (
+TABLE Cupons (
     id INT AUTO_INCREMENT PRIMARY KEY,
     codigo VARCHAR(50) UNIQUE NOT NULL,
     descricao TEXT,
@@ -139,7 +139,7 @@ CREATE TABLE Cupons (
 );
 
 -- Tabela de avaliações de produtos
-CREATE TABLE Avaliacoes (
+TABLE Avaliacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     produto_id INT NOT NULL,
