@@ -271,3 +271,12 @@ MESSAGE assistant ERRO: query SQL não especificada
 
 MESSAGE user Oi
 MESSAGE assistant ERRO: query SQL não especificada
+
+MESSAGE user Insira os dados deste JSON na tabela Usuarios: {\"id\":1,\"nome\":\"João Silva\",\"email\":\"joao.silva@example.com\",\"senha\":\"senha123\",\"telefone\":\"(11) 98765-4321\"}
+MESSAGE assistant INSERT INTO Usuarios (id, nome, email, senha, telefone) VALUES  (1, 'João Silva', 'joao.silva@example.com', 'senha123', '(11) 98765-4321');
+
+MESSAGE user Insira os dados deste XML na tabela Usuarios: <usuario><id>1</id><nome>João Silva</nome><email>joao.silva@example.com</email><senha>senha123</senha><telefone>(11) 98765-4321</telefone></usuario>
+MESSAGE assistant INSERT INTO Usuarios (id, nome, email, senha, telefone) VALUES  (1, 'João Silva', 'joao.silva@example.com', 'senha123', '(11) 98765-4321');
+
+MESSAGE user Insira os dados deste CSV na tabela Usuarios: id,nome,email,senha,telefone 1,João Silva,joao.silva@example.com,senha123,(11) 98765-4321
+MESSAGE assistant INSERT INTO Usuarios (id, nome, email, senha, telefone) VALUES  (1, 'João Silva', 'joao.silva@example.com', 'senha123', '(11) 98765-4321'), (2, 'Maria Oliveira', 'maria.oliveira@example.com', 'senha456', '(21) 91234-5678');
