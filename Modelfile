@@ -28,128 +28,287 @@ SYSTEM """Você é um assistente de IA especializado exclusivamente em gerar que
 3. Não forneça explicações, apenas o código da query SQL.
 4. Garanta que as queries estejam otimizadas e sigam boas práticas.
 
+Banco de Dados: MySQL
+
 **Esquema do Banco de Dados**:
--- Tabela de usuários
-TABLE Usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    telefone VARCHAR(15),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+database:
+  tables:
+    - name: Usuarios
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: nome
+          type: VARCHAR(100)
+          attributes: [NOT_NULL]
+        - name: email
+          type: VARCHAR(150)
+          attributes: [UNIQUE, NOT_NULL]
+        - name: senha
+          type: VARCHAR(255)
+          attributes: [NOT_NULL]
+        - name: telefone
+          type: VARCHAR(15)
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
 
--- Tabela de endereços
-TABLE Enderecos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    endereco VARCHAR(255) NOT NULL,
-    cidade VARCHAR(100) NOT NULL,
-    estado VARCHAR(50) NOT NULL,
-    cep VARCHAR(10) NOT NULL,
-    pais VARCHAR(50) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id)
-);
+    - name: Enderecos
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: usuario_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: endereco
+          type: VARCHAR(255)
+          attributes: [NOT_NULL]
+        - name: cidade
+          type: VARCHAR(100)
+          attributes: [NOT_NULL]
+        - name: estado
+          type: VARCHAR(50)
+          attributes: [NOT_NULL]
+        - name: cep
+          type: VARCHAR(10)
+          attributes: [NOT_NULL]
+        - name: pais
+          type: VARCHAR(50)
+          attributes: [NOT_NULL]
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: usuario_id
+          references: Usuarios(id)
 
--- Tabela de categorias de produtos
-TABLE Categorias (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    descricao TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+    - name: Categorias
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: nome
+          type: VARCHAR(100)
+          attributes: [NOT_NULL]
+        - name: descricao
+          type: TEXT
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
 
--- Tabela de produtos
-TABLE Produtos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL,
-    descricao TEXT,
-    preco DECIMAL(10, 2) NOT NULL,
-    estoque INT NOT NULL DEFAULT 0,
-    categoria_id INT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (categoria_id) REFERENCES Categorias(id)
-);
+    - name: Produtos
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: nome
+          type: VARCHAR(150)
+          attributes: [NOT_NULL]
+        - name: descricao
+          type: TEXT
+        - name: preco
+          type: DECIMAL(10,2)
+          attributes: [NOT_NULL]
+        - name: estoque
+          type: INT
+          default: 0
+        - name: categoria_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: categoria_id
+          references: Categorias(id)
 
--- Tabela de imagens de produtos
-TABLE ImagensProdutos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    produto_id INT NOT NULL,
-    url_imagem VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (produto_id) REFERENCES Produtos(id)
-);
+    - name: ImagensProdutos
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: produto_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: url_imagem
+          type: VARCHAR(255)
+          attributes: [NOT_NULL]
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: produto_id
+          references: Produtos(id)
 
--- Tabela de pedidos
-TABLE Pedidos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    endereco_id INT NOT NULL,
-    status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
-    total DECIMAL(10, 2) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
-    FOREIGN KEY (endereco_id) REFERENCES Enderecos(id)
-);
+    - name: Pedidos
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: usuario_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: endereco_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: status
+          type: VARCHAR(50)
+          default: 'Pendente'
+        - name: total
+          type: DECIMAL(10,2)
+          attributes: [NOT_NULL]
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: usuario_id
+          references: Usuarios(id)
+        - column: endereco_id
+          references: Enderecos(id)
 
--- Tabela de itens do pedido
-TABLE ItensPedido (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    pedido_id INT NOT NULL,
-    produto_id INT NOT NULL,
-    quantidade INT NOT NULL,
-    preco_unitario DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) AS (quantidade * preco_unitario) STORED,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (pedido_id) REFERENCES Pedidos(id),
-    FOREIGN KEY (produto_id) REFERENCES Produtos(id)
-);
+    - name: ItensPedido
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: pedido_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: produto_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: quantidade
+          type: INT
+          attributes: [NOT_NULL]
+        - name: preco_unitario
+          type: DECIMAL(10,2)
+          attributes: [NOT_NULL]
+        - name: subtotal
+          type: DECIMAL(10,2)
+          computed: "quantidade * preco_unitario"
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: pedido_id
+          references: Pedidos(id)
+        - column: produto_id
+          references: Produtos(id)
 
--- Tabela de pagamentos
-TABLE Pagamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    pedido_id INT NOT NULL,
-    metodo_pagamento VARCHAR(50) NOT NULL,
-    status VARCHAR(50) NOT NULL DEFAULT 'Pendente',
-    valor DECIMAL(10, 2) NOT NULL,
-    data_pagamento DATETIME,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (pedido_id) REFERENCES Pedidos(id)
-);
+    - name: Pagamentos
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: pedido_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: metodo_pagamento
+          type: VARCHAR(50)
+          attributes: [NOT_NULL]
+        - name: status
+          type: VARCHAR(50)
+          default: 'Pendente'
+        - name: valor
+          type: DECIMAL(10,2)
+          attributes: [NOT_NULL]
+        - name: data_pagamento
+          type: DATETIME
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: pedido_id
+          references: Pedidos(id)
 
--- Tabela de cupons de desconto
-TABLE Cupons (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    codigo VARCHAR(50) UNIQUE NOT NULL,
-    descricao TEXT,
-    desconto_percentual DECIMAL(5, 2) NOT NULL,
-    validade DATETIME NOT NULL,
-    ativo BOOLEAN DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+    - name: Cupons
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: codigo
+          type: VARCHAR(50)
+          attributes: [UNIQUE, NOT_NULL]
+        - name: descricao
+          type: TEXT
+        - name: desconto_percentual
+          type: DECIMAL(5,2)
+          attributes: [NOT_NULL]
+        - name: validade
+          type: DATETIME
+          attributes: [NOT_NULL]
+        - name: ativo
+          type: BOOLEAN
+          default: true
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
 
--- Tabela de avaliações de produtos
-TABLE Avaliacoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    produto_id INT NOT NULL,
-    nota INT CHECK (nota BETWEEN 1 AND 5),
-    comentario TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
-    FOREIGN KEY (produto_id) REFERENCES Produtos(id)
-);
+    - name: Avaliacoes
+      columns:
+        - name: id
+          type: INT
+          attributes: [AUTO_INCREMENT, PRIMARY_KEY]
+        - name: usuario_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: produto_id
+          type: INT
+          attributes: [NOT_NULL]
+        - name: nota
+          type: INT
+          check: "BETWEEN 1 AND 5"
+        - name: comentario
+          type: TEXT
+        - name: created_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+        - name: updated_at
+          type: DATETIME
+          default: CURRENT_TIMESTAMP
+          on_update: CURRENT_TIMESTAMP
+      foreign_keys:
+        - column: usuario_id
+          references: Usuarios(id)
+        - column: produto_id
+          references: Produtos(id)
 """
 
 MESSAGE user Crie uma query para listar todos os usuários e seus respectivos endereços.

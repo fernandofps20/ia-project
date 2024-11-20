@@ -1,25 +1,18 @@
 import ollama from "ollama";
 import pool from "../config/db.js";
-import { createMessage } from "../utils/helper.js";
 
-export const processChat = async (req, res) => {
+export const processPrompt = async (req, res) => {
     try {
-        const { message } = req.body;
+        const { prompt } = req.body;
 
-        if (!message || typeof message !== "string") {
+        if (!prompt || typeof prompt !== "string") {
             return res.status(400).json({ error: "A mensagem é obrigatória e deve ser uma string." });
         }
 
-        const userMessage = createMessage(message);
+        const generate = await ollama.generate({ model: 'sql-model', prompt })
+        console.log(generate.response);
 
-        const stream = await ollama.chat({ model: 'sql-model', messages: [userMessage], stream: true })
-        let response = '';
-        for await (const part of stream) {
-          process.stdout.write(part.message.content)
-          response += part.message.content;
-        }
-
-        const queries = response.split(";").map((q) => q.trim()).filter((q) => q.length > 0);
+        const queries = generate.response.split(";").map((q) => q.trim()).filter((q) => q.length > 0);
 
         const results = [];
         for (const query of queries) {
