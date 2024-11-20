@@ -4,7 +4,7 @@ import chatRoutes from "./routes/promptRoutes.js";
 
 const modelConfig = {
   model: "sql-model",
-  path: "./Modelfile"
+  path: "./sqlModel.modelfile"
 };
 
 await ollama.create(modelConfig);
