@@ -1,4 +1,4 @@
-FROM qwen2.5-coder:1.5b-instruct
+FROM qwen2.5-coder:0.5b-instruct
 
 PARAMETER mirostat 0
 PARAMETER mirostat_eta 0.1
@@ -8,7 +8,6 @@ PARAMETER repeat_last_n 64
 PARAMETER repeat_penalty 1.1
 PARAMETER temperature 0
 PARAMETER seed 0
-PARAMETER tfs_z 1
 PARAMETER num_predict -1
 PARAMETER top_k 40
 PARAMETER top_p 0.9
