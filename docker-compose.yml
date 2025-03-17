@@ -13,8 +13,12 @@ services:
       - mysql
       - ollama
     volumes:
-      - .:/app
-      - /app/node_modules
+        - ./src:/app/src
+        - ./public:/app/public
+        - ./sqlModel:/app/sqlModel
+        - node_modules_volume:/app/node_modules
+
+
 
   mysql:
     image: mysql:8.0
@@ -41,3 +45,4 @@ services:
 volumes:
   mysql_data:
   ollama_data:
+  node_modules_volume:

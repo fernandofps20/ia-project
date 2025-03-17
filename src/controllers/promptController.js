@@ -1,10 +1,7 @@
-import ollama from "ollama";
+import fetch from "node-fetch";
 import pool from "../config/db.js";
 
-// Configure Ollama client
-ollama.config({
-    host: process.env.OLLAMA_HOST || 'http://localhost:11435' // Updated default port
-});
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11435';
 
 export const processPrompt = async (req, res) => {
     try {
@@ -17,24 +14,30 @@ export const processPrompt = async (req, res) => {
         try {
             console.log('Connecting to Ollama...');
             
-            // Test connection first
-            const generate = await ollama.generate({
-                model: 'sql-model',
-                prompt,
-                options: {
-                    timeout: 30000, // Increase timeout to 30 seconds
-                    retry: true,
-                    retries: 3
-                }
+            const response = await fetch(`${OLLAMA_HOST}/api/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'sql-model',
+                    prompt: prompt
+                })
             });
 
-            if (!generate?.response) {
+            if (!response.ok) {
+                throw new Error(`Ollama API error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            if (!data?.response) {
                 throw new Error('No response from Ollama service');
             }
 
-            console.log('Ollama response received:', generate.response);
+            console.log('Ollama response received:', data.response);
 
-            const queries = generate.response.split(";").map((q) => q.trim()).filter((q) => q.length > 0);
+            const queries = data.response.split(";").map((q) => q.trim()).filter((q) => q.length > 0);
 
             const results = [];
             for (const query of queries) {
