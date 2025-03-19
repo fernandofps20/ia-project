@@ -18,8 +18,6 @@ services:
         - ./sqlModel:/app/sqlModel
         - node_modules_volume:/app/node_modules
 
-
-
   mysql:
     image: mysql:8.0
     ports:
@@ -30,12 +28,23 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=password
+    depends_on:
+      - mysql
+
   ollama:
     image: ollama/ollama:latest
     ports:
       - "11435:11434" # Changed host port to 11435
     volumes:
-     - ./sqlModel:/app/sqlModel  # Make sure this matches your host path
+     - ./sqlModel:/app/sqlModel
      - ollama_data:/root/.ollama
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/health"]
