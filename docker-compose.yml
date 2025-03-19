@@ -35,7 +35,8 @@ services:
     ports:
       - "11435:11434" # Changed host port to 11435
     volumes:
-      - ollama_data:/root/.ollama
+     - ./sqlModel:/app/sqlModel  # Make sure this matches your host path
+     - ollama_data:/root/.ollama
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/health"]
       interval: 30s

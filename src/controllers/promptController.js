@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+
 import pool from "../config/db.js";
 
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11435';
